@@ -15,7 +15,7 @@ Transactions that remains under 'Failed' state
 
 # Getting Started:
 
-## **Node JS / NPM**
+## *Node JS / NPM*
 ```
 # To be able to run script file as a server-side language, you need to have runtime environment
  - Choose your platform and download source code/pre-built installer
@@ -27,7 +27,7 @@ node -v /or/ node --version
 npm -v /or/ npm --version
 ```
 
-## **Project**
+## *Project*
 ```
 # Clone the project
 git clone https://github.com/AuraSp/VLM-logs.git
