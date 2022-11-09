@@ -36,7 +36,7 @@ git clone https://github.com/AuraSp/VLM-logs.git
 cd VLM
 ```
 
-## Run Script
+# Run Script
 ```
 1. Inside VLM directory open terminal/command prompt
  - Install needed dependencies for logger to work
