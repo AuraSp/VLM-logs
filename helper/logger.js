@@ -1,32 +1,52 @@
-const log4js = require('log4js');
-const logger = log4js.getLogger();
+'use strict'
 
-log4js.configure({
-    appenders: {
-        file: {
-            type: 'file',
-            filename: 'logs/trace.log',
-            layout: {
-                type: 'pattern',
-                pattern: '%n %d{D:yyyy-mm-dd T:hh.mm.ss} %p %m',
-            },
-            alwaysIncludePattern: true,
-            maxLogSize: 1 * 1024,
-            encoding: 'utf-8',
-            extension: ".log",
-        },
-        console: {
-            type: 'console',
-            layout: {
-                type: 'pattern',
-                pattern: '%[ %m %]',
-            },
-            alwaysIncludePattern: true,
-        },
-    },
-    categories: {
-        default: { appenders: ['file', 'console'], level: 'trace' },
-    },
-});
+const info = (message) => {
+    if (message) {
+        console.info(`\u001b[1;34m [INFO]  | ${message}`)
+    } else {
+        console.info(`\u001b[1;34m [INFO]  | ${message}`)
+    }
+};
 
-module.exports = logger;
+
+const warn = (message) => {
+    if (message) {
+        console.warn(`\u001b[1;33m [WARN]  | ${message}`)
+    } else {
+        console.warn(`\u001b[1;33m [WARN]  | ${message}`)
+    }
+};
+
+
+const error = (message) => {
+    if (message) {
+        console.error(`\u001b[1;31m [ERROR] | ${message}`)
+    } else {
+        console.error(`\u001b[1;31m [ERROR] | ${message}`)
+    }
+};
+
+const fatal = (message) => {
+    if (message) {
+        console.error(`\u001b[1;35m [FATAL] | ${message}`)
+    } else {
+        console.error(`\u001b[1;35m [FATAL] | ${message}`)
+    }
+};
+
+const debug = (message) => {
+    if (message) {
+        console.debug(`\u001b[1;32m [DEBUG] | ${message}`)
+    } else {
+        console.debug(`\u001b[1;32m [DEBUG] | ${message}`)
+    }
+};
+
+
+module.exports = [
+    info,
+    warn,
+    error,
+    fatal,
+    debug
+]

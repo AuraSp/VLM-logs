@@ -1,9 +1,22 @@
 'use strict';
 
+const { Console } = require("console");
 const xml2js = require('xml2js');
 const fs = require('fs');
-const log4js = require('log4js');
-const logger = require('./helper/logger');
+
+const [
+    info,
+    warn,
+    error,
+    fatal,
+    debug
+] = require('./helper/logger.js');
+
+//export console logs to file
+const loggerFile = new Console({
+    stdout: fs.createWriteStream("./logs/Info.txt"),
+    stderr: fs.createWriteStream("./logs/Error.txt"),
+});
 
 
 const parser = new xml2js.Parser({ attrkey: 'ATTR' });
@@ -16,7 +29,7 @@ parser.parseString(xml_file, (error, result) => {
         logDetails(result.karnel_log_management);
     }
     else {
-        logger.error(error);
+        loggerFile.error(error);
     }
 });
 
@@ -26,21 +39,33 @@ function logDetails(xml) {
     //ALL EXISTING TRANSACTIONS
     const data = xml.transaction;
 
+    //ALL SUCCEEDED TRANSACTIONS
+    const succeeded_transaction = data.filter(x => x.status !== undefined && x.status.includes('01'));
 
     //ALL FAILED TRANSACTIONS
     const failed_transaction = data.filter(x => x.status == undefined || !x.status.includes('01'));
 
-
-
-    //Date Time
+    //DATE TIME
     const karnel_log_date = xml.ATTR.date;
+
+
+
+    //INFO LOGGER
+    loggerFile.table({
+        ManagementDate: karnel_log_date,
+        TransactionsLength: data.length,
+        MaxPropLength: Math.max(...data.map(a => Object.keys(a).length)),
+        SucceededTransactions: succeeded_transaction.length,
+        FailedTransactions: failed_transaction.length,
+    });
+
 
     failed_transaction.map((i) => {
 
         //Transaction ID
         let ids = i.id.join();
-
         //Start Time
+
         let start_time = i.start_time.join();
 
         //Responsible Employee
@@ -53,18 +78,20 @@ function logDetails(xml) {
         if (i.status === undefined) {
             status = 'No /or missing/ data';
 
-            logger.fatal(`${karnel_log_date} | ${ids} | ${start_time} | ${employee} | ${status}`);
+            fatal(`${karnel_log_date} | ${ids} | ${start_time} | ${employee} | ${status}`);
+            loggerFile.error(`${karnel_log_date} | ${ids} | ${start_time} | ${employee} | ${status}`);
+
         } else {
             status = i.status.join();
 
             //Error levels undentifying
             if (status === '02') {
-                logger.warn(`${karnel_log_date} | ${ids} | ${start_time} | ${employee} | ${status}`);
+                error(`${karnel_log_date} | ${ids} | ${start_time} | ${employee} | ${status}`);
+                loggerFile.error(`${karnel_log_date} | ${ids} | ${start_time} | ${employee} | ${status}`);
             } else {
-                logger.error(`${karnel_log_date} | ${ids} | ${start_time} | ${employee} | ${status}`);
+                warn(`${karnel_log_date} | ${ids} | ${start_time} | ${employee} | ${status}`);
+                loggerFile.error(`${karnel_log_date} | ${ids} | ${start_time} | ${employee} | ${status}`);
             };
         };
     });
 };
-
-log4js.shutdown(() => { });
