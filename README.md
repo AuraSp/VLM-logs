@@ -95,7 +95,7 @@ npm i /or/ npm install
 ```
 <p align="right">(<a href="#readme-top">Back to top</a>)</p>
 
-###### **Log folder will be created after running the script. If needed, it can be opened like regular text file**
+###### **Log folder will be created after running the script using NPM. If needed, it can be opened like regular text file**
 
  [Node.js]: https://img.shields.io/badge/Node.js-6DA55F?&style=for-the-badge&logo=node.js&logoColor=#689f63
  [Node-url]: https://nodejs.org/en/
